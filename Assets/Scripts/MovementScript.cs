@@ -6,6 +6,7 @@ public partial class MovementScript : Godot.CharacterBody3D
 {
 	public const float Speed = 5.0f;
 	public const float JumpVelocity = 4.5f;
+	public float RotateAccelerate = 7f;
 
 	// Get the gravity from the project settings to be synced with RigidBody nodes.
 	public float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
@@ -21,7 +22,8 @@ public partial class MovementScript : Godot.CharacterBody3D
 	public override void _PhysicsProcess(double delta)
 	{
 		Vector3 velocity = Velocity;
-		_t += (float)delta * 1.0f;
+		Vector3 rotation = Rotation;
+		_t += (float)delta * 0.5f;
 
 		// Add the gravity.
 		if (!IsOnFloor())
@@ -30,15 +32,17 @@ public partial class MovementScript : Godot.CharacterBody3D
 		// Handle Jump.
 		if (Input.IsActionJustPressed("ui_accept") && IsOnFloor())
 			velocity.Y = JumpVelocity;
-
-		// Get the input direction and handle the movement/deceleration.
-		// As good practice, you should replace UI actions with custom gameplay actions.
-		Vector2 inputDir = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
-		Vector3 direction = (Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
+		
+		
+		Vector2 inputDir = Input.GetVector("move_left", "move_right", "move_forward", "move_back");
+		
+		Vector3 direction =  new Vector3(inputDir.X, 0, inputDir.Y).Normalized();
 		if (direction != Vector3.Zero)
 		{
 			velocity.X = direction.X * Speed;
 			velocity.Z = direction.Z * Speed;
+			
+			rotation.Y = (float)Mathf.LerpAngle(rotation.Y, Mathf.Atan2(direction.X, direction.Z), delta * RotateAccelerate);
 		}
 		else
 		{
@@ -47,6 +51,7 @@ public partial class MovementScript : Godot.CharacterBody3D
 		}
 		
 		Velocity = velocity;
+		Rotation = rotation;
 		MoveAndSlide();
 	}
 }
