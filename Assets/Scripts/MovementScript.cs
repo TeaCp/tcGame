@@ -4,18 +4,21 @@ using System.Diagnostics;
 
 public partial class MovementScript : Godot.CharacterBody3D
 {
-	public const float Speed = 5.0f;
-	public const float JumpVelocity = 4.5f;
-	public float RotateAccelerate = 7f;
+	[Export] private float Speed = 5.0f;
+	[Export] private float JumpVelocity = 4.5f;
+	[Export] private float RotateAccelerate = 7f;
 
 	// Get the gravity from the project settings to be synced with RigidBody nodes.
-	public float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
+	private float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
 
 	private Node3D cleric;
+	private AnimationPlayer animator;
 
 	public override void _Ready()
 	{
 		cleric = GetNode<Node3D>("Cleric2");
+		animator = GetNode<AnimationPlayer>((NodePath)GetChild<Node3D>(-1).GetMeta("AnimatorPath"));
+		animator.CurrentAnimation = "run";
 	}
 	
 	private float _t = 0.0f;
