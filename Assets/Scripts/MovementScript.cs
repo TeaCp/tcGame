@@ -17,8 +17,8 @@ public partial class MovementScript : Godot.CharacterBody3D
 	public override void _Ready()
 	{
 		cleric = GetNode<Node3D>("Cleric2");
-		animator = GetNode<AnimationPlayer>((NodePath)GetChild<Node3D>(-1).GetMeta("AnimatorPath"));
-		animator.CurrentAnimation = "run";
+		animator = GetChild<Node3D>(-1).GetChild<AnimationPlayer>(-1);
+		animator.CurrentAnimation = "Idle";
 	}
 	
 	private float _t = 0.0f;
@@ -46,11 +46,13 @@ public partial class MovementScript : Godot.CharacterBody3D
 			velocity.Z = direction.Z * Speed;
 			
 			rotation.Y = (float)Mathf.LerpAngle(rotation.Y, Mathf.Atan2(direction.X, direction.Z), delta * RotateAccelerate);
+			animator.CurrentAnimation = "Run";
 		}
 		else
 		{
 			velocity.X = Mathf.MoveToward(Velocity.X, 0, Speed);
 			velocity.Z = Mathf.MoveToward(Velocity.Z, 0, Speed);
+			animator.CurrentAnimation = "Idle";
 		}
 		
 		Velocity = velocity;

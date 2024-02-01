@@ -18,7 +18,7 @@ public partial class CameraMovement : Camera3D
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
-		Position = Position.Lerp(_player.Position + _originalPos, (float)delta * 2);
+		Position = _player.Position + _originalPos;
 		LookAt(_player.Position);
 	}
 }
