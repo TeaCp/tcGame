@@ -1,0 +1,84 @@
+[gd_scene load_steps=15 format=3 uid="uid://b7s784aecxw3o"]
+
+[ext_resource type="Shader" path="res://Assets/Shaders/ppfx.gdshader" id="1_reiuy"]
+[ext_resource type="Shader" path="res://Assets/Shaders/main_scene.gdshader" id="1_u1wvi"]
+[ext_resource type="Script" path="res://Assets/Scripts/MovementScript.cs" id="2_yl2bv"]
+[ext_resource type="PackedScene" uid="uid://cfa3t27m54brh" path="res://Assets/Models/Cleric/Cleric.gltf" id="3_5410g"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_unsta"]
+shader = ExtResource("1_reiuy")
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_fiavm"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_ppib6"]
+sky_material = SubResource("ProceduralSkyMaterial_fiavm")
+
+[sub_resource type="Environment" id="Environment_gku8q"]
+background_mode = 2
+sky = SubResource("Sky_ppib6")
+tonemap_mode = 2
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_3vpcg"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_hmlqx"]
+noise = SubResource("FastNoiseLite_3vpcg")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_knqrk"]
+render_priority = 0
+shader = ExtResource("1_u1wvi")
+shader_parameter/noise = SubResource("NoiseTexture2D_hmlqx")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_4cxkf"]
+material = SubResource("ShaderMaterial_knqrk")
+size = Vector2(10, 10)
+
+[sub_resource type="HeightMapShape3D" id="HeightMapShape3D_n8kcn"]
+map_width = 11
+map_depth = 11
+map_data = PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_cwtw6"]
+size = Vector3(1, 2.82129, 1)
+
+[node name="MainScene" type="Node3D"]
+
+[node name="PostProcessing" type="CanvasLayer" parent="."]
+
+[node name="ColorRect" type="ColorRect" parent="PostProcessing"]
+material = SubResource("ShaderMaterial_unsta")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_gku8q")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 5, 0)
+shadow_enabled = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_4cxkf")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D"]
+shape = SubResource("HeightMapShape3D_n8kcn")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.898794, -0.251439, 0.359093, 0, 0.819152, 0.573576, -0.438371, -0.515527, 0.736249, 1.875, 3.26143, 6.07376)
+
+[node name="CharacterBody3D" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+script = ExtResource("2_yl2bv")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.46901, 0)
+shape = SubResource("BoxShape3D_cwtw6")
+
+[node name="Cleric2" parent="CharacterBody3D" instance=ExtResource("3_5410g")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.173058, 0, 0.00786781)
