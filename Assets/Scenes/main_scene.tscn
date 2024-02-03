@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://b7s784aecxw3o"]
+[gd_scene load_steps=19 format=3 uid="uid://b7s784aecxw3o"]
 
 [ext_resource type="Shader" path="res://Assets/Shaders/ppfx.gdshader" id="1_reiuy"]
 [ext_resource type="Shader" path="res://Assets/Shaders/main_scene.gdshader" id="1_u1wvi"]
@@ -6,8 +6,11 @@
 [ext_resource type="Script" path="res://Assets/Scripts/CameraMovement.cs" id="3_80rvx"]
 [ext_resource type="PackedScene" uid="uid://cwf00dy7j6lwt" path="res://Assets/Models/Cleric/cleric.tscn" id="5_1lf6k"]
 
+[sub_resource type="BoxMesh" id="BoxMesh_83o7w"]
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_unsta"]
 shader = ExtResource("1_reiuy")
+shader_parameter/pixelSize = 8
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_fiavm"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -43,7 +46,16 @@ map_data = PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 [sub_resource type="BoxShape3D" id="BoxShape3D_cwtw6"]
 size = Vector3(1, 2.74488, 1)
 
+[sub_resource type="BoxMesh" id="BoxMesh_yqdsc"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_hlhqu"]
+
 [node name="MainScene" type="Node3D"]
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 3)
+mesh = SubResource("BoxMesh_83o7w")
+skeleton = NodePath("../PostProcessing")
 
 [node name="PostProcessing" type="CanvasLayer" parent="."]
 
@@ -71,8 +83,9 @@ mesh = SubResource("PlaneMesh_4cxkf")
 shape = SubResource("HeightMapShape3D_n8kcn")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(0.898794, -0.251439, 0.359093, 0, 0.819152, 0.573576, -0.438371, -0.515527, 0.736249, 2.694, 5.314, 5.704)
-size = 7.857
+transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 6, 11)
+projection = 1
+size = 10.0
 script = ExtResource("3_80rvx")
 PlayerNodePath = NodePath("../CharacterBody3D")
 AccelerationSpeed = 2.0
@@ -86,3 +99,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.51135, 0)
 shape = SubResource("BoxShape3D_cwtw6")
 
 [node name="Cleric2" parent="CharacterBody3D" instance=ExtResource("5_1lf6k")]
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 2.62208, 0.32411, 0)
+mesh = SubResource("BoxMesh_yqdsc")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 1, 0)
+mesh = SubResource("CylinderMesh_hlhqu")
