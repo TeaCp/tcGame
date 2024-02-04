@@ -52,37 +52,56 @@ size = Vector3(1, 2.74488, 1)
 
 [node name="MainScene" type="Node3D"]
 
-[node name="MeshInstance3D4" type="MeshInstance3D" parent="."]
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+stretch = true
+stretch_shrink = 4
+
+[node name="SubViewport" type="SubViewport" parent="Control/SubViewportContainer"]
+handle_input_locally = false
+size = Vector2i(320, 180)
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="Control/SubViewportContainer/SubViewport"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 3)
 mesh = SubResource("BoxMesh_83o7w")
 skeleton = NodePath("../PostProcessing")
 
-[node name="PostProcessing" type="CanvasLayer" parent="."]
+[node name="PostProcessing" type="CanvasLayer" parent="Control/SubViewportContainer/SubViewport"]
 
-[node name="ColorRect" type="ColorRect" parent="PostProcessing"]
+[node name="ColorRect" type="ColorRect" parent="Control/SubViewportContainer/SubViewport/PostProcessing"]
 material = SubResource("ShaderMaterial_unsta")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+metadata/_edit_use_anchors_ = true
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Control/SubViewportContainer/SubViewport"]
 environment = SubResource("Environment_gku8q")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Control/SubViewportContainer/SubViewport"]
 transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 5, 0)
 shadow_enabled = true
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Control/SubViewportContainer/SubViewport"]
 mesh = SubResource("PlaneMesh_4cxkf")
+skeleton = NodePath("../../../..")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D"]
+[node name="StaticBody3D" type="StaticBody3D" parent="Control/SubViewportContainer/SubViewport/MeshInstance3D"]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Control/SubViewportContainer/SubViewport/MeshInstance3D/StaticBody3D"]
 shape = SubResource("HeightMapShape3D_n8kcn")
 
-[node name="Camera3D" type="Camera3D" parent="."]
+[node name="Camera3D" type="Camera3D" parent="Control/SubViewportContainer/SubViewport"]
 transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 6, 11)
 projection = 1
 size = 10.0
@@ -90,20 +109,22 @@ script = ExtResource("3_80rvx")
 PlayerNodePath = NodePath("../CharacterBody3D")
 AccelerationSpeed = 2.0
 
-[node name="CharacterBody3D" type="CharacterBody3D" parent="."]
+[node name="CharacterBody3D" type="CharacterBody3D" parent="Control/SubViewportContainer/SubViewport"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.01342, 0)
 script = ExtResource("2_yl2bv")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Control/SubViewportContainer/SubViewport/CharacterBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.51135, 0)
 shape = SubResource("BoxShape3D_cwtw6")
 
-[node name="Cleric2" parent="CharacterBody3D" instance=ExtResource("5_1lf6k")]
+[node name="Cleric2" parent="Control/SubViewportContainer/SubViewport/CharacterBody3D" instance=ExtResource("5_1lf6k")]
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Control/SubViewportContainer/SubViewport"]
 transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 2.62208, 0.32411, 0)
 mesh = SubResource("BoxMesh_yqdsc")
+skeleton = NodePath("../../../..")
 
-[node name="MeshInstance3D3" type="MeshInstance3D" parent="."]
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="Control/SubViewportContainer/SubViewport"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 1, 0)
 mesh = SubResource("CylinderMesh_hlhqu")
+skeleton = NodePath("../../../..")
