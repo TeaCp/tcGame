@@ -1,10 +1,13 @@
-[gd_scene load_steps=4 format=3 uid="uid://b7s784aecxw3o"]
+[gd_scene load_steps=5 format=3 uid="uid://b7s784aecxw3o"]
 
-[ext_resource type="PackedScene" uid="uid://c10kfslu7xfic" path="res://Assets/Scenes/demo_scene.tscn" id="1_ji3fc"]
+[ext_resource type="Script" path="res://Assets/Scenes/SceneChanger.cs" id="1_dyplt"]
+[ext_resource type="PackedScene" uid="uid://d2qo2ishjq0is" path="res://Assets/Scenes/demo_scene.tscn" id="1_ji3fc"]
 [ext_resource type="Script" path="res://Assets/Scripts/UIRender.cs" id="6_kbwwh"]
 [ext_resource type="FontFile" uid="uid://b0xciodt2jdsu" path="res://Assets/Fonts/Bookxel.otf" id="7_8ids5"]
 
 [node name="MainScene" type="Node3D"]
+script = ExtResource("1_dyplt")
+SubViewPortPath = NodePath("Control/SubViewportContainer/SubViewport")
 
 [node name="Control" type="Control" parent="."]
 layout_mode = 3
