@@ -1,0 +1,97 @@
+[gd_scene load_steps=15 format=3 uid="uid://d2qo2ishjq0is"]
+
+[ext_resource type="Material" uid="uid://c32gfgmn42n63" path="res://Assets/Materials/terrainMaterial.tres" id="1_ryq47"]
+[ext_resource type="Script" path="res://Assets/Scripts/CameraMovement.cs" id="3_fdbor"]
+[ext_resource type="PackedScene" uid="uid://d4n0asy3rcxlk" path="res://Assets/Prefabs/player.tscn" id="3_ue78a"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_4cxkf"]
+material = ExtResource("1_ryq47")
+size = Vector2(15, 15)
+
+[sub_resource type="HeightMapShape3D" id="HeightMapShape3D_n8kcn"]
+map_width = 16
+map_depth = 16
+map_data = PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+
+[sub_resource type="BoxMesh" id="BoxMesh_yqdsc"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_n8i5l"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_83o7w"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5wp0a"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_hlhqu"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_6tvea"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_erib7"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_ppib6"]
+sky_material = SubResource("ProceduralSkyMaterial_erib7")
+
+[sub_resource type="Environment" id="Environment_8w16r"]
+background_mode = 2
+sky = SubResource("Sky_ppib6")
+tonemap_mode = 2
+
+[node name="demoScene" type="Node3D"]
+
+[node name="Plane" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 0, 0, 0)
+mesh = SubResource("PlaneMesh_4cxkf")
+skeleton = NodePath("../../../../..")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Plane"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Plane/StaticBody3D"]
+shape = SubResource("HeightMapShape3D_n8kcn")
+
+[node name="Player" parent="." instance=ExtResource("3_ue78a")]
+
+[node name="RotatedCube" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.62208, 0.32411, 0)
+mesh = SubResource("BoxMesh_yqdsc")
+skeleton = NodePath("../../../../..")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="RotatedCube"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RotatedCube/StaticBody3D"]
+shape = SubResource("BoxShape3D_n8i5l")
+
+[node name="Cube" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -4, 0.5, 3)
+mesh = SubResource("BoxMesh_83o7w")
+skeleton = NodePath("")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Cube"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cube/StaticBody3D"]
+shape = SubResource("BoxShape3D_5wp0a")
+
+[node name="Cylinder" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -4, 1, 0)
+mesh = SubResource("CylinderMesh_hlhqu")
+skeleton = NodePath("../../../../..")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Cylinder"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cylinder/StaticBody3D"]
+shape = SubResource("CylinderShape3D_6tvea")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 5, 5.305)
+projection = 1
+current = true
+size = 10.0
+script = ExtResource("3_fdbor")
+PlayerNodePath = NodePath("../Player")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_8w16r")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 5, 0)
+shadow_enabled = true

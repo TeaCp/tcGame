@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://d4n0asy3rcxlk"]
+
+[ext_resource type="Script" path="res://Assets/Scripts/MovementScript.cs" id="1_qjxtu"]
+[ext_resource type="PackedScene" uid="uid://cwf00dy7j6lwt" path="res://Assets/Models/Cleric/cleric.tscn" id="2_ym315"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_cwtw6"]
+size = Vector3(1, 2.74488, 1)
+
+[node name="CharacterBody3D" type="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.01342, 0)
+script = ExtResource("1_qjxtu")
+Speed = 6.0
+JumpVelocity = 5.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.51135, 0)
+shape = SubResource("BoxShape3D_cwtw6")
+
+[node name="Cleric2" parent="." instance=ExtResource("2_ym315")]
