@@ -9,7 +9,7 @@ public partial class SceneChanger : Node3D
 	private SubViewport _subViewPort;
 	// temporal
 	private PackedScene[] _scenes;
-	private int _sceneIdx = -1;
+	private int _sceneIdx = 1;
 	
 	public override void _Ready()
 	{

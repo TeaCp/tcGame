@@ -1,8 +1,9 @@
-[gd_scene load_steps=11 format=3 uid="uid://cqd0bq62g3y1g"]
+[gd_scene load_steps=12 format=3 uid="uid://cqd0bq62g3y1g"]
 
 [ext_resource type="Material" uid="uid://c32gfgmn42n63" path="res://Assets/Materials/terrainMaterial.tres" id="1_msmpv"]
 [ext_resource type="PackedScene" uid="uid://d4n0asy3rcxlk" path="res://Assets/Prefabs/player.tscn" id="2_3y6ye"]
 [ext_resource type="Script" path="res://Assets/Scripts/CameraMovement.cs" id="3_3i714"]
+[ext_resource type="PackedScene" uid="uid://b5j4sonlrww2r" path="res://Assets/Prefabs/monk.tscn" id="4_5ra1c"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_dkipf"]
 material = ExtResource("1_msmpv")
@@ -42,8 +43,8 @@ mesh = SubResource("PlaneMesh_dkipf")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="terrain/StaticBody3D"]
 shape = SubResource("HeightMapShape3D_ehy16")
 
-[node name="CharacterBody3D" parent="." instance=ExtResource("2_3y6ye")]
-transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, 0, 0, 0)
+[node name="Player" parent="." instance=ExtResource("2_3y6ye")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 
 [node name="Walls" type="Node3D" parent="."]
 transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, 0, 0, 0)
@@ -86,7 +87,7 @@ projection = 1
 current = true
 size = 10.0
 script = ExtResource("3_3i714")
-PlayerNodePath = NodePath("../CharacterBody3D")
+PlayerNodePath = NodePath("../Player")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_tndx0")
@@ -94,3 +95,5 @@ environment = SubResource("Environment_tndx0")
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 5, 0)
 shadow_enabled = true
+
+[node name="Monk" parent="." instance=ExtResource("4_5ra1c")]
