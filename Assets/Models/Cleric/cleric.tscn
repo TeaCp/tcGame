@@ -46,10 +46,10 @@ bones/33/rotation = Quaternion(-6.1438e-06, 0.702952, 0.711237, -5.58377e-06)
 bones/33/scale = Vector3(1, 1, 1)
 
 [node name="Head_2" parent="CharacterArmature/Skeleton3D" index="0"]
-transform = Transform3D(1, 1.16954e-12, 9.8953e-10, -1.27234e-12, 1, 5.21541e-08, -9.8953e-10, 3.72529e-08, 1, 0.00794286, 2.60869, -0.222863)
+transform = Transform3D(1, 1.05588e-12, 1.33878e-09, -1.1559e-12, 1, -2.98023e-08, -1.33878e-09, 1.11759e-07, 1, 0.00794285, 2.60869, -0.222863)
 
 [node name="Cleric_Staff" parent="CharacterArmature/Skeleton3D" index="1"]
-transform = Transform3D(0.0288471, -0.999564, 0.00617763, 0.992946, 0.029366, 0.114873, -0.115004, 0.00282026, 0.993361, -0.383723, 0.790365, 0.068934)
+transform = Transform3D(0.0288472, -0.999564, 0.00617875, 0.992946, 0.0293662, 0.114872, -0.115003, 0.00282143, 0.993361, -0.383723, 0.790368, 0.0689331)
 
 [node name="ShoulderPads" parent="CharacterArmature/Skeleton3D" index="2"]
-transform = Transform3D(1, 3.00204e-12, -1.13687e-13, -3.09086e-12, 1, 5.96046e-08, 4.54747e-13, 2.98023e-08, 1, -5.82077e-11, -0.0860002, 0.163923)
+transform = Transform3D(1, 2.89546e-12, 2.27374e-13, -2.97717e-12, 1, -3.72529e-08, 1.13687e-13, 1.19209e-07, 1, -3.55067e-09, -0.0859967, 0.163923)

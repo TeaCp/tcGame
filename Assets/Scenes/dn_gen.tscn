@@ -1,0 +1,33 @@
+[gd_scene load_steps=6 format=3 uid="uid://b34diotvou85b"]
+
+[ext_resource type="Script" path="res://Assets/Scenes/DnGen.cs" id="1_mw581"]
+[ext_resource type="PackedScene" uid="uid://c3ciqjer5invd" path="res://Assets/Prefabs/gen_block_2_2.tscn" id="2_yuwyf"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_7w1t6"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_1locl"]
+sky_material = SubResource("ProceduralSkyMaterial_7w1t6")
+
+[sub_resource type="Environment" id="Environment_2lbx6"]
+background_mode = 2
+sky = SubResource("Sky_1locl")
+tonemap_mode = 2
+
+[node name="DNGen" type="Node3D"]
+script = ExtResource("1_mw581")
+blocksCount = 4
+GenRadius = 4
+blockPrefab = ExtResource("2_yuwyf")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_2lbx6")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1.19249e-08, 1, 0, -1, 1.19249e-08, -0.00550175, 3.83801, -0.0100718)
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 5, 0)
+fov = 131.5
+size = 0.048
