@@ -26,7 +26,7 @@ public partial class Room2D
 
     public Vector2 CenterPoint => Position + Size/2;
 
-    public GridColor Color { get; set; } = GridColor.Blue;
+    public GridColor Color { get; set; } = GridColor.Hall;
 
     public bool IsDrawn { get; private set; } = false;
 
@@ -47,8 +47,8 @@ public partial class Room2D
         {
             size = Utils.RoundM(Utils.BoxMuller(MaxSize, MinSize, rnd), tileSize);
         }
-        while ((size.Abs().X / size.Abs().Y < 0.4 || size.Abs().X / size.Abs().Y > 3) ||
-                (size.Abs().X / size.Abs().Y > 0.9 && size.Abs().X / size.Abs().Y < 1.1));
+        while ((size.Abs().X / size.Abs().Y < 0.4 || size.Abs().X / size.Abs().Y > 3) || // not sausage-like
+                (size.Abs().X / size.Abs().Y > 0.9 && size.Abs().X / size.Abs().Y < 1.1)); // not square-like
 
         rect = new(pos,size);
     }
@@ -74,7 +74,7 @@ public partial class Room2D
         return nearest;
     }
 
-    public void DrawOnGridMap(GridMap grid) // todo: draw and find nearest 
+    public void DrawOnGridMap(GridMap grid)
     {
         if (IsDrawn) return;
         foreach (var p in this)
@@ -96,23 +96,15 @@ public partial class Room2D
         );
     }
 
-    public bool IsOverlapped(Room2D other)
-    {
-        return rect.Intersects(other.rect, true);
-        //var offset = Mesh.Size / 2;
-        //var offsetOther = other.Mesh.Size / 2;
-        //return !((Position.X - offset.X) > (other.Position.X + offsetOther.X) ||
-        //       (other.Position.X - offsetOther.X) > (Position.X + offset.X) ||
-        //       (Position.Y - offset.Y) > (other.Position.Y + offsetOther.Y) ||
-        //       (other.Position.Y - offsetOther.Y) > (Position.Y + offset.Y));
-    }
+    public bool IsOverlapped(Room2D other) => rect.Intersects(other.rect, true);
 
     public bool HasPoint(Vector2 point) => rect.HasPoint(point);
 
     public enum GridColor : byte
     {
-        White,
-        Blue,
-        Red,
+        Corridor,
+        Hall,
+        Room,
+        Door,
     }
 }

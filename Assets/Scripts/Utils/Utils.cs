@@ -36,4 +36,6 @@ internal static partial class Utils
 
     public static float RoundM(double n, double m) => (float)Math.Floor(((n + m - 1) / m) * m);
     public static Vector2 RoundM(Vector2 n, double m) => new Vector2(RoundM(n.X, m), RoundM(n.Y, m));
+
+    public static Vector3 V2ToV3(Vector2 v ) => new Vector3(v.X, 0, v.Y);
 }

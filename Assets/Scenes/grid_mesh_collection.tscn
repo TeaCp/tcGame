@@ -9,10 +9,10 @@ shader_parameter/CLR = Color(255, 255, 255, 1)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_enpt4"]
 material = SubResource("ShaderMaterial_1d52c")
-size = Vector2(1, 1)
+size = Vector2(4, 4)
 
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_bt7kd"]
-points = PackedVector3Array(-0.5, 0, -0.5, 0.5, 0, 0.5, -0.5, 0, 0.5, 0.5, 0, -0.5)
+points = PackedVector3Array(-2, 0, -2, 2, 0, 2, -2, 0, 2, 2, 0, -2)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_x2tht"]
 render_priority = 0
@@ -21,7 +21,7 @@ shader_parameter/CLR = Color(0.211765, 1, 1, 1)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_rxhub"]
 material = SubResource("ShaderMaterial_x2tht")
-size = Vector2(1, 1)
+size = Vector2(4, 4)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ew0b0"]
 render_priority = 0
@@ -30,7 +30,7 @@ shader_parameter/CLR = Color(257, 0, 0, 1)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_tk8t0"]
 material = SubResource("ShaderMaterial_ew0b0")
-size = Vector2(1, 1)
+size = Vector2(4, 4)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_4c3g1"]
 render_priority = 0
@@ -39,7 +39,7 @@ shader_parameter/CLR = Color(1, 255, 0, 1)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_soy50"]
 material = SubResource("ShaderMaterial_4c3g1")
-size = Vector2(1, 1)
+size = Vector2(4, 4)
 
 [node name="GridMeshCollection" type="Node3D"]
 
@@ -52,7 +52,7 @@ mesh = SubResource("PlaneMesh_enpt4")
 shape = SubResource("ConvexPolygonShape3D_bt7kd")
 
 [node name="roomSmall" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 0)
 mesh = SubResource("PlaneMesh_rxhub")
 skeleton = NodePath("../corridor")
 
@@ -62,7 +62,7 @@ skeleton = NodePath("../corridor")
 shape = SubResource("ConvexPolygonShape3D_bt7kd")
 
 [node name="roomBig" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 0)
 mesh = SubResource("PlaneMesh_tk8t0")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="roomBig"]
@@ -71,7 +71,7 @@ mesh = SubResource("PlaneMesh_tk8t0")
 shape = SubResource("ConvexPolygonShape3D_bt7kd")
 
 [node name="door" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, 0)
 mesh = SubResource("PlaneMesh_soy50")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="door"]
