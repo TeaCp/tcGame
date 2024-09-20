@@ -1,6 +1,6 @@
-[gd_scene load_steps=11 format=3 uid="uid://b8yycm5t5iajk"]
+[gd_scene load_steps=14 format=3 uid="uid://b8yycm5t5iajk"]
 
-[ext_resource type="Shader" path="res://Assets/Prefabs/gen_block_2_2.gdshader" id="1_21tcp"]
+[ext_resource type="Shader" path="res://Assets/Shaders/dn_gen_block.gdshader" id="1_21tcp"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1d52c"]
 render_priority = 0
@@ -41,6 +41,18 @@ shader_parameter/CLR = Color(1, 255, 0, 1)
 material = SubResource("ShaderMaterial_4c3g1")
 size = Vector2(4, 4)
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_a2ogm"]
+render_priority = 0
+shader = ExtResource("1_21tcp")
+shader_parameter/CLR = Color(0.910542, 0.0689328, 0.70881, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ponr3"]
+material = SubResource("ShaderMaterial_a2ogm")
+size = Vector3(4, 4, 4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ao8bt"]
+size = Vector3(4, 4, 4)
+
 [node name="GridMeshCollection" type="Node3D"]
 
 [node name="corridor" type="MeshInstance3D" parent="."]
@@ -78,3 +90,12 @@ mesh = SubResource("PlaneMesh_soy50")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="door/StaticBody3D"]
 shape = SubResource("ConvexPolygonShape3D_bt7kd")
+
+[node name="wall" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 0, 0)
+mesh = SubResource("BoxMesh_ponr3")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="wall"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="wall/StaticBody3D"]
+shape = SubResource("BoxShape3D_ao8bt")

@@ -55,9 +55,9 @@ public partial class Room2D
 
     public IEnumerator<Vector2I> GetEnumerator()
     {
-        for (int i = (int)Position.X; i < FarPoint.X; i++)
+        for (int i = (int)Position.X; i <= FarPoint.X; i++)
         {
-            for (int j = (int)Position.Y; j < FarPoint.Y; j++)
+            for (int j = (int)Position.Y; j <= FarPoint.Y; j++)
             {
                 yield return new Vector2I (i,j);
             }
@@ -80,9 +80,15 @@ public partial class Room2D
         foreach (var p in this)
         {
             var pos = new Vector3I(p.X,0,p.Y);
+            var clr = (int)Color;
+            if(p.X == Position.X || p.X == FarPoint.X || p.Y == Position.Y || p.Y == FarPoint.Y)
+            {
+                clr = (int)GridColor.Wall;
+            }
+
             if (grid.GetCellItem(pos) == GridMap.InvalidCellItem)
             {
-                grid.SetCellItem(pos, (int)Color);
+                grid.SetCellItem(pos, clr);
             }
         }
         IsDrawn = true;
@@ -106,5 +112,6 @@ public partial class Room2D
         Hall,
         Room,
         Door,
+        Wall,
     }
 }

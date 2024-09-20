@@ -51,8 +51,11 @@ public partial class PlayerScript : Godot.CharacterBody3D, IDamageReceivable
 		Vector2 inputDir = Input.GetVector("move_left", "move_right", "move_forward", "move_back");
 		
 		Vector3 direction =  new Vector3(inputDir.X, 0, inputDir.Y).Normalized();
-		if (direction != Vector3.Zero)
+		const float rotateAngle = Mathf.Pi / 4;
+
+        if (direction != Vector3.Zero)
 		{
+			direction = direction.Rotated(Vector3.Up, rotateAngle);
 			StartRunAnimation("Run");
 			velocity.X = direction.X * Speed;
 			velocity.Z = direction.Z * Speed;

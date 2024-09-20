@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://dheskr0jasl7n"]
+
+[ext_resource type="Script" path="res://Assets/Scripts/DungeonGeneration/DungeonGenerator.cs" id="1_tg51d"]
+
+[node name="Generator" type="Node2D"]
+position = Vector2(600, 350)
+script = ExtResource("1_tg51d")
+blocksCount = 150
+GenRadius = 20
+Dev = 4
+Mean = 8
+Seed = 43110
