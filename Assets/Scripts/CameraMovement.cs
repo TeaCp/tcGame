@@ -19,6 +19,6 @@ public partial class CameraMovement : Camera3D
 	public override void _Process(double delta)
 	{
 		Position = _player.Position + _originalPos;
-		LookAt(_player.Position);
+		//LookAt(_player.Position);
 	}
 }

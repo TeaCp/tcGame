@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://b5j4sonlrww2r"]
 
-[ext_resource type="Script" path="res://Assets/Scenes/Monk.cs" id="1_h4b7r"]
+[ext_resource type="Script" path="res://Assets/Scripts/Monk.cs" id="1_h4b7r"]
 [ext_resource type="PackedScene" uid="uid://cfnny8ny4x5t1" path="res://Assets/Models/Monk/monk.tscn" id="2_hb4e5"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_key2v"]

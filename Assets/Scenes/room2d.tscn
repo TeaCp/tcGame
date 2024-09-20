@@ -1,0 +1,13 @@
+[gd_scene load_steps=4 format=3 uid="uid://dwetufig5iev5"]
+
+[ext_resource type="Script" path="res://Assets/Scripts/DungeonGeneration/Room2d.cs" id="1_ifiwj"]
+[ext_resource type="Texture2D" uid="uid://dsxrecry37nq3" path="res://icon.svg" id="2_yn6dd"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_8yt6x"]
+size = Vector2(20, 20)
+orientation = 2
+
+[node name="MeshInstance2D" type="MeshInstance2D"]
+mesh = SubResource("PlaneMesh_8yt6x")
+texture = ExtResource("2_yn6dd")
+script = ExtResource("1_ifiwj")
