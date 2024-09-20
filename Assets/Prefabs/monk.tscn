@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3 uid="uid://b5j4sonlrww2r"]
+
+[ext_resource type="Script" path="res://Assets/Scripts/Monk.cs" id="1_h4b7r"]
+[ext_resource type="PackedScene" uid="uid://cfnny8ny4x5t1" path="res://Assets/Models/Monk/monk.tscn" id="2_hb4e5"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_key2v"]
+size = Vector3(1, 2.69849, 1)
+
+[node name="Monk" type="CharacterBody3D" groups=["DamageReceivable"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.84662, 0.140604, 0.672518)
+script = ExtResource("1_h4b7r")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3522, 0)
+shape = SubResource("BoxShape3D_key2v")
+
+[node name="Monk2" parent="." instance=ExtResource("2_hb4e5")]

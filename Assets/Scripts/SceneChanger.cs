@@ -9,7 +9,7 @@ public partial class SceneChanger : Node3D
 	private SubViewport _subViewPort;
 	// temporal
 	private PackedScene[] _scenes;
-	private int _sceneIdx = -1;
+	private int _sceneIdx = 1;
 	
 	public override void _Ready()
 	{
@@ -17,7 +17,8 @@ public partial class SceneChanger : Node3D
 		_scenes = new[]
 		{
 			GD.Load<PackedScene>("res://Assets/Scenes/home_scene.tscn"),
-			GD.Load<PackedScene>("res://Assets/Scenes/demo_scene.tscn")
+			GD.Load<PackedScene>("res://Assets/Scenes/demo_scene.tscn"),
+			GD.Load<PackedScene>("res://Assets/Scenes/dn_gen_demoscene.tscn")
 		};
 	}
 

@@ -16,3 +16,7 @@ mono_crash.*.json
 
 # Rider ignores
 .idea/
+
+# VS ignores
+.vs/
+.vscode/

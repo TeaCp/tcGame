@@ -1,0 +1,58 @@
+[gd_scene load_steps=8 format=3 uid="uid://6qxuv4jd68qh"]
+
+[ext_resource type="MeshLibrary" uid="uid://cg3kigvca4twm" path="res://Assets/Scenes/dngen_mesh_library.tres" id="1_tfrfh"]
+[ext_resource type="PackedScene" uid="uid://d4n0asy3rcxlk" path="res://Assets/Prefabs/player.tscn" id="2_6urba"]
+[ext_resource type="PackedScene" uid="uid://dheskr0jasl7n" path="res://Assets/Prefabs/DungeonGenerator.tscn" id="3_ay13v"]
+[ext_resource type="Script" path="res://Assets/Scripts/CameraMovement.cs" id="4_cknoe"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_hwppf"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_khyn4"]
+sky_material = SubResource("ProceduralSkyMaterial_hwppf")
+
+[sub_resource type="Environment" id="Environment_4btwp"]
+background_mode = 2
+sky = SubResource("Sky_khyn4")
+tonemap_mode = 2
+
+[node name="Node3D" type="Node3D"]
+
+[node name="GridMap" type="GridMap" parent="."]
+mesh_library = ExtResource("1_tfrfh")
+cell_size = Vector3(4, 1, 4)
+metadata/_editor_floor_ = Vector3(0, 0, 0)
+
+[node name="CharacterBody3D" parent="." instance=ExtResource("2_6urba")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_4btwp")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866025, 0.5, -2.18557e-08, 0, -4.37114e-08, -1, -0.5, -0.866025, 3.78552e-08, 0, 0, 0)
+shadow_enabled = true
+
+[node name="Generator" parent="." instance=ExtResource("3_ay13v")]
+editor_description = "Change to Node instead Node2D"
+
+[node name="Camera3D3" type="Camera3D" parent="."]
+transform = Transform3D(0.707107, -0.353553, 0.612372, 0, 0.866025, 0.5, -0.707107, -0.353553, 0.612372, 7.735, 9.095, 8.305)
+projection = 1
+current = true
+size = 10.0
+script = ExtResource("4_cknoe")
+PlayerNodePath = NodePath("../CharacterBody3D")
+
+[node name="Camera3D2" type="Camera3D" parent="."]
+process_mode = 4
+transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 6.256, 5.538)
+size = 10.0
+script = ExtResource("4_cknoe")
+PlayerNodePath = NodePath("../CharacterBody3D")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 140, 0)
+fov = 137.8
+size = 100.0
