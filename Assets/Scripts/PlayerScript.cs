@@ -9,6 +9,7 @@ public partial class PlayerScript : Godot.CharacterBody3D, IDamageReceivable
 	[Export] private float Speed = 5.0f;
 	[Export] private float JumpVelocity = 4.5f;
 	[Export] private float RotateAccelerate = 7f;
+	[Export] public NodePath CameraNodePath;
 
 	// Get the gravity from the project settings to be synced with RigidBody nodes.
 	private float _gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
@@ -18,8 +19,12 @@ public partial class PlayerScript : Godot.CharacterBody3D, IDamageReceivable
 	private Health _health;
 	private Area3D _hitArea;
 
+	private Camera3D _camera;
+
 	public override void _Ready()
 	{
+		_camera = GetNode<Camera3D>(CameraNodePath);
+
 		_health = new Health(2, this);
 		_health.OnDeath += OnDeath;
 		_health.OnDamageRecieve += OnDamageRecieve;
@@ -50,8 +55,9 @@ public partial class PlayerScript : Godot.CharacterBody3D, IDamageReceivable
 		
 		Vector2 inputDir = Input.GetVector("move_left", "move_right", "move_forward", "move_back");
 		
-		Vector3 direction =  new Vector3(inputDir.X, 0, inputDir.Y).Normalized();
-		const float rotateAngle = Mathf.Pi / 4;
+		Vector3 direction = new Vector3(inputDir.X, 0, inputDir.Y).Normalized();
+
+		float rotateAngle = _camera.Rotation.Y;
 
         if (direction != Vector3.Zero)
 		{
