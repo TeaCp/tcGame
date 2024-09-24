@@ -40,8 +40,7 @@ editor_description = "Change to Node instead Node2D"
 [node name="Camera3D3" type="Camera3D" parent="."]
 transform = Transform3D(0.707107, -0.353553, 0.612372, 0, 0.866025, 0.5, -0.707107, -0.353553, 0.612372, 7.735, 9.095, 8.305)
 projection = 1
-current = true
-size = 10.0
+size = 20.476
 script = ExtResource("4_cknoe")
 PlayerNodePath = NodePath("../CharacterBody3D")
 
@@ -53,6 +52,7 @@ script = ExtResource("4_cknoe")
 PlayerNodePath = NodePath("../CharacterBody3D")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 140, 0)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 40, 0)
+current = true
 fov = 137.8
 size = 100.0

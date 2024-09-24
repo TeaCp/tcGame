@@ -7,7 +7,6 @@ public partial class Room2D
 {
     private int MinSize = 4;
     private int MaxSize = 20;
-    private int tileSize = 2;
     private Rect2 rect;
 
     public Vector2 Position
@@ -22,7 +21,7 @@ public partial class Room2D
         set => rect.Size = value;
     }
 
-    public Vector2 FarPoint => new(Position.X + Size.X, Position.Y + Size.Y);
+    public Vector2 FarPoint => rect.End;// - Vector2.One;
 
     public Vector2 CenterPoint => Position + Size/2;
 
@@ -30,27 +29,26 @@ public partial class Room2D
 
     public bool IsDrawn { get; private set; } = false;
 
-    public Room2D(int minSize, int maxSize, int tileSize)
+    public Room2D(int minSize, int maxSize)
     {
         MinSize = minSize;
         MaxSize = maxSize;
-        this.tileSize = tileSize;
     }
     public Room2D() { }
 
     public void Make(Random rnd, int genRadius)
 	{
-        Vector2 pos = Utils.RoundM(Utils.GetRandomPointInCircle(genRadius, rnd), tileSize);
+        Vector2 pos = Utils.GetRandomPointInCircle(genRadius, rnd).Floor();
         Vector2 size;
         //var mean = (MaxSize + MinSize) / 2; var dev = (MaxSize - MinSize) / 2;
         do
         {
-            size = Utils.RoundM(Utils.BoxMuller(MaxSize, MinSize, rnd), tileSize);
+            size = Utils.BoxMuller(MaxSize, MinSize, rnd).Floor();
         }
         while ((size.Abs().X / size.Abs().Y < 0.4 || size.Abs().X / size.Abs().Y > 3) || // not sausage-like
                 (size.Abs().X / size.Abs().Y > 0.9 && size.Abs().X / size.Abs().Y < 1.1)); // not square-like
 
-        rect = new(pos,size);
+        rect = new Rect2(pos,size);
     }
 
     public IEnumerator<Vector2I> GetEnumerator()
@@ -77,24 +75,40 @@ public partial class Room2D
     public void DrawOnGridMap(GridMap grid)
     {
         if (IsDrawn) return;
-        foreach (var p in this)
-        {
-            var pos = new Vector3I(p.X,0,p.Y);
-            var clr = (int)Color;
-            if(p.X == Position.X || p.X == FarPoint.X || p.Y == Position.Y || p.Y == FarPoint.Y)
-            {
-                clr = (int)GridColor.Wall;
-            }
 
+        void DrawIfEmpty(Vector3I pos, int clr)
+        {
             if (grid.GetCellItem(pos) == GridMap.InvalidCellItem)
             {
                 grid.SetCellItem(pos, clr);
             }
         }
+
+        foreach (var p in this)
+        {
+            var pos = new Vector3I(p.X,0,p.Y);
+            var clr = (int)Color;
+
+            DrawIfEmpty(pos, clr);
+        }
+        for (int i = (int)Position.X - 1; i <= FarPoint.X + 1; i++)
+        {
+            var posUp = new Vector3I(i, 0, (int)Position.Y - 1);
+            var posBot = new Vector3I(i, 0, (int)FarPoint.Y + 1);
+            DrawIfEmpty(posUp, (int)GridColor.Wall);
+            DrawIfEmpty(posBot, (int)GridColor.Wall);
+        }
+        for (int i = (int)Position.Y - 1; i <= FarPoint.Y + 1; i++)
+        {
+            var posUp = new Vector3I((int)Position.X - 1, 0, i);
+            var posBot = new Vector3I((int)FarPoint.X + 1, 0, i);
+            DrawIfEmpty(posUp, (int)GridColor.Wall);
+            DrawIfEmpty(posBot, (int)GridColor.Wall);
+        }
         IsDrawn = true;
     }
 
-    public void Move(Vector2 move, int tileSize = 2)
+    public void Move(Vector2 move, int tileSize = 1)
     {
         rect.Position += new Vector2(
             Mathf.RoundToInt(move.X) * tileSize,
@@ -102,11 +116,24 @@ public partial class Room2D
         );
     }
 
-    public bool IsOverlapped(Room2D other) => rect.Intersects(other.rect, true);
+    public bool IsOverlapped(Room2D other) => rect.Grow(1).Intersects(other.rect, true);
 
-    public bool HasPoint(Vector2 point) => rect.HasPoint(point);
+    public bool HasPoint(in Vector2 p_point)
+	{
+		if (p_point.X < Position.X)
+			return false;
+		if (p_point.Y < Position.Y)
+			return false;
+		
+		if (p_point.X > FarPoint.X )
+			return false;
+		if (p_point.Y > FarPoint.Y )
+			return false;
+		
+		return true;
+	}
 
-    public enum GridColor : byte
+    public enum GridColor
     {
         Corridor,
         Hall,

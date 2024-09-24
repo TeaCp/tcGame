@@ -1,4 +1,5 @@
 using Godot;
+using Godot.NativeInterop;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,7 +36,7 @@ public partial class DungeonGenerator : Node
 
         for (int i  = 0; i < blocksCount; i++)
         {
-            var room = new Room2D(Dev, Mean, 1); // when tileSize != 1 generation run weird, idk
+            var room = new Room2D(Dev, Mean);
             room.Make(rnd, GenRadius);
             rooms2d[i] = room;
             if (room.Size.X > Mean * 1.3 && room.Size.Y > Mean * 1.3)
@@ -73,8 +74,8 @@ public partial class DungeonGenerator : Node
 
                     var dir = (rooms2d[other].CenterPoint - rooms2d[current].CenterPoint).Normalized();
 
-                    rooms2d[current].Move(-dir);
-                    rooms2d[other].Move(dir);
+                    rooms2d[current].Move(-dir, tileSize);
+                    rooms2d[other].Move(dir, tileSize);
                 }
             }
         }
@@ -135,7 +136,7 @@ public partial class DungeonGenerator : Node
         }
 
         AStar2D hallway_graph = mst_graph;
-        for(int i = 0; i < del_graph.GetPointCount() * 0.1f; i++) // get back some connections to make loops
+        for(int i = 0; i < del_graph.GetPointCount() * 0.12f; i++) // get back some connections to make loops
         {
             long p, c; short tries = 0;
             do
@@ -159,10 +160,11 @@ public partial class DungeonGenerator : Node
             {
                 if (c > p)
                 {
-                    var from = Utils.V2ToV3( bigRooms[(int)p].GetNearest(bigRooms[(int)c].CenterPoint) );
+                    var from = bigRooms[(int)p].GetNearest(bigRooms[(int)c].CenterPoint);
+                    var from3 = Utils.V2ToV3(from);
                     var to = Utils.V2ToV3( bigRooms[(int)c].GetNearest(bigRooms[(int)p].CenterPoint) );
-                    hallways.Add(new(from, to));
-                    grid.SetCellItem((Vector3I)from, (int)Room2D.GridColor.Door);
+                    hallways.Add(new(from3, to));
+                    grid.SetCellItem((Vector3I)from3, (int)Room2D.GridColor.Door);
                     grid.SetCellItem((Vector3I)to, (int)Room2D.GridColor.Door);
                 }
             }
@@ -187,35 +189,31 @@ public partial class DungeonGenerator : Node
 
             for(int i = 0; i < hall.Length; i++)
             {
-                for(int j = 0; j < rooms2d.Length; j+=1) //draw small rooms
+                
+                for(int j = 0; j < rooms2d.Length; j++) //draw small rooms
                 {
                     if (rooms2d[j].HasPoint(hall[i]))
                     {
                         rooms2d[j].DrawOnGridMap(grid);
+                        break;
                     }
                 }
 
                 var pos = Utils.V2ToV3(hall[i]);
-                //if(i == 0 || i == hall.Length - 1)
-                //{
-                    if(grid.GetCellItem((Vector3I)pos) == GridMap.InvalidCellItem) // draw coridors
-                        grid.SetCellItem((Vector3I)pos, (int)Room2D.GridColor.Corridor);
-                //}
-                //else
-                //{
-                //    pos = new Vector3(pos.X - 1, 0, pos.Z - 1);
-                //    for(int j = 0; j < 3; j++)
-                //    {
-                //        pos = new Vector3(pos.X + 1, 0, pos.Z);
-                //        var tmp = pos;
-                //        for(int k = 0; k < 3; k++)
-                //        {
-                //            tmp = new Vector3(tmp.X, 0, tmp.Z + 1);
-                //            if (grid.GetCellItem((Vector3I)tmp) == GridMap.InvalidCellItem)
-                //                grid.SetCellItem((Vector3I)tmp, (int)Room2D.GridColor.Corridor);
-                //        }
-                //    }
-                //}
+                if(grid.GetCellItem((Vector3I)pos) == GridMap.InvalidCellItem ||
+                    grid.GetCellItem((Vector3I)pos) == (int)Room2D.GridColor.Wall) // draw coridors
+                {
+                    for(int j = (int)pos.X - 1; j <= pos.X + 1; j++)
+                    {
+                        for(int k =  (int)pos.Z - 1; k <= pos.Z + 1; k++)
+                        {
+                            if(j != pos.X && k != pos.Z)
+                            grid.SetCellItem(new Vector3I(j, 0, k), (int)Room2D.GridColor.Wall); // TODO!!!!!! rework this. make corridor class inherend room2d
+                        }
+                    }
+                    grid.SetCellItem((Vector3I)pos, (int)Room2D.GridColor.Corridor);
+                }
+
             }
         }
     }
