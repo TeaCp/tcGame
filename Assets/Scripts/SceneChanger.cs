@@ -18,7 +18,7 @@ public partial class SceneChanger : Node3D
 		{
 			GD.Load<PackedScene>("res://Assets/Scenes/home_scene.tscn"),
 			GD.Load<PackedScene>("res://Assets/Scenes/demo_scene.tscn"),
-			GD.Load<PackedScene>("res://Assets/Scenes/dn_gen_2d.tscn")
+			GD.Load<PackedScene>("res://Assets/Scenes/dn_gen_demoscene.tscn")
 		};
 	}
 

@@ -3,38 +3,38 @@ using System;
 using System.Collections.Generic;
 using TeaCup.PixelGame.UtilTools;
 
-public partial class Room2D
+namespace TeaCup.PixelGame.Dungeon;
+
+public class Room : DungeonTile
 {
     private int MinSize = 4;
     private int MaxSize = 20;
-    private Rect2 rect;
+    private Rect2I rect;
 
-    public Vector2 Position
+    public override Vector2I Position
     {
         get => rect.Position;
         set => rect.Position = value;
     }
 
-    public Vector2 Size
+    public Vector2I Size
     {
         get => rect.Size;
         set => rect.Size = value;
     }
 
-    public Vector2 FarPoint => rect.End;// - Vector2.One;
+    public Vector2I FarPoint => rect.End;// - Vector2.One;
 
-    public Vector2 CenterPoint => Position + Size/2;
+    public Vector2I CenterPoint => Position + Size/2;
 
     public GridColor Color { get; set; } = GridColor.Hall;
 
-    public bool IsDrawn { get; private set; } = false;
-
-    public Room2D(int minSize, int maxSize)
+    public Room(int minSize, int maxSize)
     {
         MinSize = minSize;
         MaxSize = maxSize;
     }
-    public Room2D() { }
+    public Room() { }
 
     public void Make(Random rnd, int genRadius)
 	{
@@ -48,10 +48,10 @@ public partial class Room2D
         while ((size.Abs().X / size.Abs().Y < 0.4 || size.Abs().X / size.Abs().Y > 3) || // not sausage-like
                 (size.Abs().X / size.Abs().Y > 0.9 && size.Abs().X / size.Abs().Y < 1.1)); // not square-like
 
-        rect = new Rect2(pos,size);
+        rect = new Rect2I((Vector2I)pos, (Vector2I)size);
     }
 
-    public IEnumerator<Vector2I> GetEnumerator()
+    public override IEnumerator<Vector2I> GetEnumerator()
     {
         for (int i = (int)Position.X; i <= FarPoint.X; i++)
         {
@@ -62,63 +62,58 @@ public partial class Room2D
         }
     }
 
-    public Vector2 GetNearest(Vector2 point)
+    public override Vector2I GetNearest(Vector2I point)
     {
         var nearest = Position;
-        foreach(Vector2 p in this)
+        foreach(Vector2I p in this)
         {
             if (p.DistanceSquaredTo(point) < nearest.DistanceSquaredTo(point)) nearest = p;
         }
         return nearest;
     }
 
-    public void DrawOnGridMap(GridMap grid)
+    public override void DrawOnGridMap(GridMap grid)
     {
-        if (IsDrawn) return;
-
-        void DrawIfEmpty(Vector3I pos, int clr)
-        {
-            if (grid.GetCellItem(pos) == GridMap.InvalidCellItem)
-            {
-                grid.SetCellItem(pos, clr);
-            }
-        }
+        base.DrawOnGridMap(grid);
 
         foreach (var p in this)
         {
             var pos = new Vector3I(p.X,0,p.Y);
             var clr = (int)Color;
 
-            DrawIfEmpty(pos, clr);
+            DrawIfEmpty(grid, pos, clr);
         }
         for (int i = (int)Position.X - 1; i <= FarPoint.X + 1; i++)
         {
             var posUp = new Vector3I(i, 0, (int)Position.Y - 1);
             var posBot = new Vector3I(i, 0, (int)FarPoint.Y + 1);
-            DrawIfEmpty(posUp, (int)GridColor.Wall);
-            DrawIfEmpty(posBot, (int)GridColor.Wall);
+            DrawIfEmpty(grid, posUp, (int)GridColor.Wall);
+            DrawIfEmpty(grid, posBot, (int)GridColor.Wall);
         }
         for (int i = (int)Position.Y - 1; i <= FarPoint.Y + 1; i++)
         {
             var posUp = new Vector3I((int)Position.X - 1, 0, i);
             var posBot = new Vector3I((int)FarPoint.X + 1, 0, i);
-            DrawIfEmpty(posUp, (int)GridColor.Wall);
-            DrawIfEmpty(posBot, (int)GridColor.Wall);
+            DrawIfEmpty(grid, posUp, (int)GridColor.Wall);
+            DrawIfEmpty(grid, posBot, (int)GridColor.Wall);
         }
-        IsDrawn = true;
     }
 
-    public void Move(Vector2 move, int tileSize = 1)
+    public override void Move(Vector2 move)
     {
-        rect.Position += new Vector2(
-            Mathf.RoundToInt(move.X) * tileSize,
-            Mathf.RoundToInt(move.Y) * tileSize
+        rect.Position += new Vector2I(
+            Mathf.RoundToInt(move.X),
+            Mathf.RoundToInt(move.Y)
         );
     }
 
-    public bool IsOverlapped(Room2D other) => rect.Grow(1).Intersects(other.rect, true);
-
-    public bool HasPoint(in Vector2 p_point)
+    public override bool IsOverlapped(DungeonTile other)
+    {
+        if(other as Room != null)
+            return rect.Grow(1).Intersects((other as Room).rect);
+        return false; // TODO: rework this
+    }
+    public override bool HasPoint(in Vector2 p_point)
 	{
 		if (p_point.X < Position.X)
 			return false;
@@ -132,13 +127,4 @@ public partial class Room2D
 		
 		return true;
 	}
-
-    public enum GridColor
-    {
-        Corridor,
-        Hall,
-        Room,
-        Door,
-        Wall,
-    }
 }
