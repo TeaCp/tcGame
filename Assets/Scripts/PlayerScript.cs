@@ -9,7 +9,6 @@ public partial class PlayerScript : Godot.CharacterBody3D, IDamageReceivable
 	[Export] private float Speed = 5.0f;
 	[Export] private float JumpVelocity = 4.5f;
 	[Export] private float RotateAccelerate = 7f;
-	[Export] public NodePath CameraNodePath;
 
 	// Get the gravity from the project settings to be synced with RigidBody nodes.
 	private float _gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
@@ -23,7 +22,7 @@ public partial class PlayerScript : Godot.CharacterBody3D, IDamageReceivable
 
 	public override void _Ready()
 	{
-		_camera = GetNode<Camera3D>(CameraNodePath);
+		_camera = GetViewport().GetCamera3D();
 
 		_health = new Health(2, this);
 		_health.OnDeath += OnDeath;

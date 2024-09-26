@@ -1,39 +1,42 @@
 using Godot;
 using System;
+using System.Reflection.Metadata;
 using System.Security.AccessControl;
 
 public partial class CameraMovement : Camera3D
 {
-	[Export] public NodePath PlayerNodePath;
+	[Export] private float animationDuration = 0.1f;
 
-	[Export] private float AccelerationSpeed;
+	[Export] private Vector3 _localPosition;
 
-	private Vector3 _originalPos;
-	private CharacterBody3D _player;
+	private PlayerScript _player;
+
 	public override void _Ready()
 	{
-		_originalPos = Position;
-		_player = GetNode<CharacterBody3D>(PlayerNodePath);
+		_player = GetNode<PlayerScript>("../Player");
+		_localPosition = Position - _player.Position;
 	}
 
-
-	public override void _UnhandledInput(InputEvent @event)
+	public override void _Input(InputEvent @event)
 	{
-    	if (@event is InputEventKey eventKey)
+		//TODO: add state machine for correct animation without interruption
+		if (@event.IsActionPressed("rotate_camera") && true)
 		{
-			if (eventKey.Pressed && eventKey.Keycode == Key.T)
-			{
-				const float phi = Mathf.Pi / 4;
-				Rotate(new Vector3(0, 1, 0), phi);
-				_originalPos = _originalPos.Rotated(new Vector3(0, 1, 0), phi);
-			}	
+				const float _phi = Mathf.Pi / 4;
+				Vector3 _newLocalPosition = _localPosition.Rotated(Vector3.Up, _phi);
+
+				Tween tween = CreateTween().SetParallel(true);
+
+				//? camera rotation
+				tween.TweenProperty(this, "basis", Basis.Rotated(Vector3.Up, _phi).Orthonormalized(), animationDuration);
+
+				//? camera translation
+				tween.TweenProperty(this, "_localPosition", _newLocalPosition, animationDuration);
 		}
 	}
-
 	public override void _PhysicsProcess(double delta)
 	{
-		Position = _player.Position + _originalPos;
-		//LookAt(_player.Position);
+		Position = _player.Position + _localPosition;
 	}
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)

@@ -1,7 +1,7 @@
 [gd_scene load_steps=15 format=3 uid="uid://d2qo2ishjq0is"]
 
 [ext_resource type="Material" uid="uid://c32gfgmn42n63" path="res://Assets/Materials/terrainMaterial.tres" id="1_ryq47"]
-[ext_resource type="Script" path="res://Assets/Scripts/CameraMovement.cs" id="3_fdbor"]
+[ext_resource type="PackedScene" uid="uid://dqf8e1l3m8n4u" path="res://Assets/Prefabs/Camera3D.tscn" id="3_fiv5w"]
 [ext_resource type="PackedScene" uid="uid://d4n0asy3rcxlk" path="res://Assets/Prefabs/player.tscn" id="3_ue78a"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_4cxkf"]
@@ -49,7 +49,6 @@ skeleton = NodePath("../../../../..")
 shape = SubResource("HeightMapShape3D_n8kcn")
 
 [node name="Player" parent="." instance=ExtResource("3_ue78a")]
-CameraNodePath = NodePath("../Camera3D")
 
 [node name="RotatedCube" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 1.62208, 0.32411, 0)
@@ -81,14 +80,7 @@ skeleton = NodePath("../../../../..")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Cylinder/StaticBody3D"]
 shape = SubResource("CylinderShape3D_6tvea")
 
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(0.707108, -0.353553, 0.612372, 0, 0.866025, 0.499999, -0.707108, -0.353553, 0.612372, 6, 5, 6)
-projection = 1
-current = true
-size = 10.0
-far = 100.0
-script = ExtResource("3_fdbor")
-PlayerNodePath = NodePath("../Player")
+[node name="Camera3D" parent="." instance=ExtResource("3_fiv5w")]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_8w16r")
