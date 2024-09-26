@@ -25,7 +25,7 @@ public partial class CameraMovement : Camera3D
 				const float _phi = Mathf.Pi / 4;
 				Vector3 _newLocalPosition = _localPosition.Rotated(Vector3.Up, _phi);
 
-				Tween tween = CreateTween().SetParallel(true);
+				Tween tween = CreateTween().SetEase(Tween.EaseType.InOut).SetTrans(Tween.TransitionType.Quad).SetParallel(true);
 
 				//? camera rotation
 				tween.TweenProperty(this, "basis", Basis.Rotated(Vector3.Up, _phi).Orthonormalized(), animationDuration);
@@ -34,12 +34,9 @@ public partial class CameraMovement : Camera3D
 				tween.TweenProperty(this, "_localPosition", _newLocalPosition, animationDuration);
 		}
 	}
-	public override void _PhysicsProcess(double delta)
-	{
-		Position = _player.Position + _localPosition;
-	}
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
+		Position = _player.Position + _localPosition;
 	}
 }
