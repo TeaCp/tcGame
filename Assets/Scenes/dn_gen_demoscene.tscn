@@ -24,7 +24,7 @@ mesh_library = ExtResource("1_tfrfh")
 cell_size = Vector3(4, 1, 4)
 metadata/_editor_floor_ = Vector3(0, 0, 0)
 
-[node name="CharacterBody3D" parent="." instance=ExtResource("2_6urba")]
+[node name="Player" parent="." instance=ExtResource("2_6urba")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
@@ -41,18 +41,11 @@ editor_description = "Change to Node instead Node2D"
 transform = Transform3D(0.707107, -0.353553, 0.612372, 0, 0.866025, 0.5, -0.707107, -0.353553, 0.612372, 7.735, 9.095, 8.305)
 projection = 1
 current = true
-size = 10.0
+size = 20.476
 script = ExtResource("4_cknoe")
-PlayerNodePath = NodePath("../CharacterBody3D")
-
-[node name="Camera3D2" type="Camera3D" parent="."]
-process_mode = 4
-transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 6.256, 5.538)
-size = 10.0
-script = ExtResource("4_cknoe")
-PlayerNodePath = NodePath("../CharacterBody3D")
+PlayerNodePath = NodePath("../Player")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 140, 0)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 120, 0)
 fov = 137.8
 size = 100.0

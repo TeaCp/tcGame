@@ -31,6 +31,11 @@ public partial class PlayerScript : Godot.CharacterBody3D, IDamageReceivable
 		
 		StartRunAnimation("Idle");
 	}
+
+	public void Spawn(Vector3 spawnPosition)
+	{
+		Position = spawnPosition;
+    }
 	
 	private float _t = 0.0f;
 	public override void _PhysicsProcess(double delta)

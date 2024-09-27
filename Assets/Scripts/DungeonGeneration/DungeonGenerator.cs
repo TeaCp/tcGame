@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using TeaCup.PixelGame.UtilTools;
 
+namespace TeaCup.PixelGame.Dungeon;
+
 public partial class DungeonGenerator : Node
 {
     [Export] private int blocksCount;
@@ -13,15 +15,22 @@ public partial class DungeonGenerator : Node
     [Export] private int Seed = 0;
 
     private Random rnd;
-    private Room2D[] rooms2d;
+    private Room[] rooms2d;
     private GridMap grid;
 
     private static int tileSize = 2;
-    private List<Room2D> bigRooms = new(8);
+    private List<Room> bigRooms = new(8);
 
     public override void _EnterTree()
     {
-        base._EnterTree();
+        GenerateLayout();
+        GenerateDecorations();
+        SpawnEnemies();
+        GetNode<PlayerScript>("../Player").Spawn(new Vector3(bigRooms[0].CenterPoint.X, 1, bigRooms[0].CenterPoint.Y) * tileSize);
+    }
+
+    public void GenerateLayout()
+    {
         grid = GetParent().GetChild<GridMap>(0);
         grid.Clear();
         tileSize = (int)grid.CellSize[0];
@@ -31,16 +40,16 @@ public partial class DungeonGenerator : Node
         else
             rnd = new(Seed);
 
-        rooms2d = new Room2D[blocksCount];
+        rooms2d = new Room[blocksCount];
 
         for (int i  = 0; i < blocksCount; i++)
         {
-            var room = new Room2D(Dev, Mean, 1); // when tileSize != 1 generation run weird, idk
+            var room = new Room(Dev, Mean);
             room.Make(rnd, GenRadius);
             rooms2d[i] = room;
             if (room.Size.X > Mean * 1.3 && room.Size.Y > Mean * 1.3)
             {
-                room.Color = Room2D.GridColor.Room;
+                room.Color = GridColor.Room;
                 bigRooms.Add(room);
             }
         }
@@ -49,16 +58,13 @@ public partial class DungeonGenerator : Node
 
         VisualizeRooms();
 
-        // set char position
-        GetParent().GetChild<Node3D>(1).Position = new Vector3(bigRooms[0].CenterPoint.X, 1.5f, bigRooms[0].CenterPoint.Y) * tileSize; 
+        CreateHallways();
     }
 
     public void VisualizeRooms()
     {
         foreach(var r in bigRooms)
             r.DrawOnGridMap(grid);
-
-        CreateHallways();
     }
 
     private void SeparateRooms()
@@ -71,7 +77,7 @@ public partial class DungeonGenerator : Node
                 {
                     if (current == other || !rooms2d[current].IsOverlapped(rooms2d[other])) continue;
 
-                    var dir = (rooms2d[other].CenterPoint - rooms2d[current].CenterPoint).Normalized();
+                    Vector2 dir = ((Vector2)rooms2d[other].CenterPoint - rooms2d[current].CenterPoint).Normalized();
 
                     rooms2d[current].Move(-dir);
                     rooms2d[other].Move(dir);
@@ -135,7 +141,7 @@ public partial class DungeonGenerator : Node
         }
 
         AStar2D hallway_graph = mst_graph;
-        for(int i = 0; i < del_graph.GetPointCount() * 0.1f; i++) // get back some connections to make loops
+        for(int i = 0; i < del_graph.GetPointCount() * 0.12f; i++) // get back some connections to make loops
         {
             long p, c; short tries = 0;
             do
@@ -159,11 +165,12 @@ public partial class DungeonGenerator : Node
             {
                 if (c > p)
                 {
-                    var from = Utils.V2ToV3( bigRooms[(int)p].GetNearest(bigRooms[(int)c].CenterPoint) );
+                    var from = bigRooms[(int)p].GetNearest(bigRooms[(int)c].CenterPoint);
+                    var from3 = Utils.V2ToV3(from);
                     var to = Utils.V2ToV3( bigRooms[(int)c].GetNearest(bigRooms[(int)p].CenterPoint) );
-                    hallways.Add(new(from, to));
-                    grid.SetCellItem((Vector3I)from, (int)Room2D.GridColor.Door);
-                    grid.SetCellItem((Vector3I)to, (int)Room2D.GridColor.Door);
+                    hallways.Add(new(from3, to));
+                    grid.SetCellItem((Vector3I)from3, (int)GridColor.Door);
+                    grid.SetCellItem((Vector3I)to, (int)GridColor.Door);
                 }
             }
         }
@@ -176,48 +183,34 @@ public partial class DungeonGenerator : Node
         };
         astar.Update();
 
-        foreach(var t in grid.GetUsedCellsByItem((int)Room2D.GridColor.Room))
+        foreach(var t in grid.GetUsedCellsByItem((int)GridColor.Room))
             astar.SetPointSolid(new Vector2I(t.X,t.Z));
 
         foreach (var h in hallways)
         {
             var from = new Vector2I((int)h.Item1.X, (int)h.Item1.Z);
             var to = new Vector2I((int)h.Item2.X, (int)h.Item2.Z);
-            var hall = astar.GetPointPath(from, to);
+            var hall = new Coridor(astar.GetPointPath(from, to));
 
-            for(int i = 0; i < hall.Length; i++)
+            for(int j = 0; j < rooms2d.Length; j++) //draw small rooms. REWORK THIS
             {
-                for(int j = 0; j < rooms2d.Length; j+=1) //draw small rooms
+                if (hall.IsOverlapped(rooms2d[j]))
                 {
-                    if (rooms2d[j].HasPoint(hall[i]))
-                    {
-                        rooms2d[j].DrawOnGridMap(grid);
-                    }
+                    rooms2d[j].DrawOnGridMap(grid);
                 }
-
-                var pos = Utils.V2ToV3(hall[i]);
-                //if(i == 0 || i == hall.Length - 1)
-                //{
-                    if(grid.GetCellItem((Vector3I)pos) == GridMap.InvalidCellItem) // draw coridors
-                        grid.SetCellItem((Vector3I)pos, (int)Room2D.GridColor.Corridor);
-                //}
-                //else
-                //{
-                //    pos = new Vector3(pos.X - 1, 0, pos.Z - 1);
-                //    for(int j = 0; j < 3; j++)
-                //    {
-                //        pos = new Vector3(pos.X + 1, 0, pos.Z);
-                //        var tmp = pos;
-                //        for(int k = 0; k < 3; k++)
-                //        {
-                //            tmp = new Vector3(tmp.X, 0, tmp.Z + 1);
-                //            if (grid.GetCellItem((Vector3I)tmp) == GridMap.InvalidCellItem)
-                //                grid.SetCellItem((Vector3I)tmp, (int)Room2D.GridColor.Corridor);
-                //        }
-                //    }
-                //}
             }
+
+            hall.DrawOnGridMap(grid);
         }
+    }
+
+    private void GenerateDecorations()
+    {
+        // Not implemented yet
+    }
+    private void SpawnEnemies()
+    {
+        // Not implemented yet
     }
 
     private bool IsAnyRoomOverlapped()
