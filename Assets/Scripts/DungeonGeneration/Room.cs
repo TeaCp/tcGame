@@ -27,8 +27,6 @@ public class Room : DungeonTile
 
     public Vector2I CenterPoint => Position + Size/2;
 
-    public GridColor Color { get; set; } = GridColor.Hall;
-
     public Room(int minSize, int maxSize)
     {
         MinSize = minSize;
@@ -107,11 +105,11 @@ public class Room : DungeonTile
         );
     }
 
-    public override bool IsOverlapped(DungeonTile other)
+    public override bool IsOverlapped(DungeonTile other) // TODO: rework this
     {
         if(other as Room != null)
             return rect.Grow(1).Intersects((other as Room).rect);
-        return false; // TODO: rework this
+        return other.IsOverlapped(this);
     }
     public override bool HasPoint(in Vector2 p_point)
 	{

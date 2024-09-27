@@ -23,7 +23,14 @@ public partial class DungeonGenerator : Node
 
     public override void _EnterTree()
     {
-        base._EnterTree();
+        GenerateLayout();
+        GenerateDecorations();
+        SpawnEnemies();
+        GetNode<PlayerScript>("../Player").Spawn(new Vector3(bigRooms[0].CenterPoint.X, 1, bigRooms[0].CenterPoint.Y) * tileSize);
+    }
+
+    public void GenerateLayout()
+    {
         grid = GetParent().GetChild<GridMap>(0);
         grid.Clear();
         tileSize = (int)grid.CellSize[0];
@@ -51,16 +58,13 @@ public partial class DungeonGenerator : Node
 
         VisualizeRooms();
 
-        // set char position
-        GetParent().GetChild<Node3D>(1).Position = new Vector3(bigRooms[0].CenterPoint.X, 1.5f, bigRooms[0].CenterPoint.Y) * tileSize; 
+        CreateHallways();
     }
 
     public void VisualizeRooms()
     {
         foreach(var r in bigRooms)
             r.DrawOnGridMap(grid);
-
-        CreateHallways();
     }
 
     private void SeparateRooms()
@@ -198,6 +202,15 @@ public partial class DungeonGenerator : Node
 
             hall.DrawOnGridMap(grid);
         }
+    }
+
+    private void GenerateDecorations()
+    {
+        // Not implemented yet
+    }
+    private void SpawnEnemies()
+    {
+        // Not implemented yet
     }
 
     private bool IsAnyRoomOverlapped()

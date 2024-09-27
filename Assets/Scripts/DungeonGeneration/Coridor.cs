@@ -24,6 +24,7 @@ public class Coridor : DungeonTile
     public Coridor(Vector2I[] tiles)
     {
         Tiles = tiles;
+        Color = GridColor.Corridor;
     }
     public Coridor(Vector2[] tiles)
     {
@@ -33,6 +34,7 @@ public class Coridor : DungeonTile
             tilesI[i] = (Vector2I)tiles[i];
         }
         Tiles = tilesI;
+        Color = GridColor.Corridor;
     }
 
     public override void DrawOnGridMap(GridMap grid)
@@ -51,7 +53,7 @@ public class Coridor : DungeonTile
                             DrawIfEmpty(grid, new Vector3I(j, 0, k), (int)GridColor.Wall);
                     }
                 }
-                grid.SetCellItem(pos, (int)GridColor.Corridor);
+                grid.SetCellItem(pos, (int)Color);
             }
         }
     }
