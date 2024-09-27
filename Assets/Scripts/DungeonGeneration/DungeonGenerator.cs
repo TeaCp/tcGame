@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TeaCup.PixelGame.UtilTools;
+using TeaCup.PixelGame.GameComponents;
 
 namespace TeaCup.PixelGame.Dungeon;
 
@@ -26,7 +27,7 @@ public partial class DungeonGenerator : Node
         GenerateLayout();
         GenerateDecorations();
         SpawnEnemies();
-        GetNode<PlayerScript>("../Player").Spawn(new Vector3(bigRooms[0].CenterPoint.X, 1, bigRooms[0].CenterPoint.Y) * tileSize);
+        GetNode<PlayerObject>("../Player").Spawn(new Vector3(bigRooms[0].CenterPoint.X, 1, bigRooms[0].CenterPoint.Y) * tileSize);
     }
 
     public void GenerateLayout()
