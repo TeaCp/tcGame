@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://d4n0asy3rcxlk"]
 
-[ext_resource type="Script" path="res://Assets/Scripts/PlayerScript.cs" id="1_as17j"]
+[ext_resource type="Script" path="res://Assets/Scripts/Player/PlayerObject.cs" id="1_as17j"]
 [ext_resource type="PackedScene" uid="uid://cwf00dy7j6lwt" path="res://Assets/Models/Cleric/cleric.tscn" id="2_ym315"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_cwtw6"]
@@ -9,7 +9,7 @@ size = Vector3(1, 2.74488, 1)
 [sub_resource type="BoxShape3D" id="BoxShape3D_s0ol4"]
 size = Vector3(2.08148, 3.93011, 1.97607)
 
-[node name="CharacterBody3D" type="CharacterBody3D" groups=["DamageReceivable"]]
+[node name="Player" type="CharacterBody3D" groups=["DamageReceivable"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.01342, 0)
 script = ExtResource("1_as17j")
 

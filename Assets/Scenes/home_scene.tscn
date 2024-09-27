@@ -43,7 +43,6 @@ mesh = SubResource("PlaneMesh_dkipf")
 shape = SubResource("HeightMapShape3D_ehy16")
 
 [node name="Player" parent="." instance=ExtResource("2_3y6ye")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 
 [node name="Walls" type="Node3D" parent="."]
 

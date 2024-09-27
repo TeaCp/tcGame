@@ -1,7 +1,8 @@
 using Godot;
-using System;
 
-public partial class PlayerScript
+namespace TeaCup.PixelGame.GameComponents;
+
+public partial class PlayerObject
 {
 	public override void _Input(InputEvent @event)
 	{
