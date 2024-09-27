@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Godot;
+using System;
 using System.Collections.Generic;
 
 namespace TeaCup.PixelGame.FSM;
@@ -36,5 +37,15 @@ public class Fsm
     public void PhysicsProcess(double delta)
     {
         CurrentState?.PhysicsProcess(delta);
+    }
+
+    public void UnhandledUnput(InputEvent @event)
+    {
+        CurrentState?.UnhandledInput(@event);
+    }
+
+    public void UnhandledKeyInput(InputEvent @event)
+    {
+        CurrentState?.UnhandledKeyInput(@event);
     }
 }

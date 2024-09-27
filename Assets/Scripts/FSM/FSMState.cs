@@ -1,4 +1,6 @@
-﻿namespace TeaCup.PixelGame.FSM;
+﻿using Godot;
+
+namespace TeaCup.PixelGame.FSM;
 
 public abstract class FSMState
 {
@@ -13,4 +15,6 @@ public abstract class FSMState
     public virtual void Exit() { }
     public virtual void Process() { }
     public virtual void PhysicsProcess(double delta) { }
+    public virtual void UnhandledInput(InputEvent @event) { }
+    public virtual void UnhandledKeyInput(InputEvent @event) { }
 }
