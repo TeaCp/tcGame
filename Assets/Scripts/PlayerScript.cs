@@ -1,6 +1,4 @@
 using Godot;
-using System;
-using System.Diagnostics;
 
 public partial class PlayerScript : Godot.CharacterBody3D, IDamageReceivable
 {
@@ -18,11 +16,11 @@ public partial class PlayerScript : Godot.CharacterBody3D, IDamageReceivable
 	private Health _health;
 	private Area3D _hitArea;
 
-	private Camera3D _camera;
+	private CameraMovement _camera;
 
 	public override void _Ready()
 	{
-		_camera = GetViewport().GetCamera3D();
+		_camera = (CameraMovement)GetViewport().GetCamera3D();
 
 		_health = new Health(2, this);
 		_health.OnDeath += OnDeath;
