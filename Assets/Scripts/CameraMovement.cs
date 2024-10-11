@@ -4,17 +4,23 @@ public partial class CameraMovement : Camera3D
 {
 	public float CameraAngle => _initialAngle;
 
-	[Export] private float _rotationDuration = 0.1f;
+	[Export] private float _rotationDuration = 0.5f;
 
-	[Export] private float _zoomDuration = 0.2f;
+	[Export] private float _zoomDuration = 0.1f;
 
-	[Export] private float _zoomSensitivity = 5.0f;
+	[Export] private float _zoomSensitivity = 2.0f;
+
+	[Export] private float _minCameraSize = 5.0f;
+
+	[Export] private float _maxCameraSize = 20.0f;
 
 	[Export] private float _rotationSensitivity = 0.005f;
 
 	[Export] private float _rotationStep = Mathf.Pi / 4;
 
 	private float _initialAngle;
+
+	private float _initialCameraSize;
 
 	private Basis _initialBasis;
 
@@ -24,15 +30,20 @@ public partial class CameraMovement : Camera3D
 
 	private PlayerScript _player;
 
+	private Vector2I _subViewportInitialSize;
+
 	public override void _Ready()
 	{
 		_player = GetNode<PlayerScript>("../Player");
+		//_subViewportContainer = GetNode<SubViewportContainer>("../../../../SubViewportContainer");
 		if (_player is null) { GD.PrintErr("Failed to get Player's node for the Camera"); }
 		
 		_localPosition = Position - _player.Position;
 		_initialBasis = _player.Basis;
 		_initialAngle = _player.Basis.Z.SignedAngleTo(Plane.PlaneXZ.Project(_localPosition), Vector3.Up);
 
+		_subViewportInitialSize = GetTree().Root.ContentScaleSize;
+		_initialCameraSize = Size;
 		Input.UseAccumulatedInput = false;
 	}
 
@@ -48,11 +59,16 @@ public partial class CameraMovement : Camera3D
 							((mouseButtonEvent.ButtonIndex == MouseButton.WheelUp) ? -1 : +1);
 				
 				//? extreme values handling
-				float newCameraSize = Mathf.Clamp(Size + signedZoomSensitivity, 5.0f, 20.0f);
+				float newCameraSize = Mathf.Clamp(Size + signedZoomSensitivity, _minCameraSize, _maxCameraSize);
+
+				//? correct viewport resolution
+				var _newSubViewportSize = (Vector2I)(newCameraSize / _initialCameraSize * (Vector2)_subViewportInitialSize);
 
 				Tween zoomTween = CreateTween().SetEase(Tween.EaseType.Out)
-							.SetTrans(Tween.TransitionType.Circ);
+							.SetTrans(Tween.TransitionType.Linear).SetParallel(true);
 				zoomTween.TweenProperty(this, "size", newCameraSize, _zoomDuration);
+				zoomTween.TweenProperty(GetTree().Root, "content_scale_size", _newSubViewportSize, _zoomDuration);
+				GD.Print(_newSubViewportSize);
 			}
     	}
 		else if (@event is InputEventMouseMotion mouseMotionEvent && Input.MouseMode == Input.MouseModeEnum.Captured)
@@ -85,13 +101,27 @@ public partial class CameraMovement : Camera3D
 		{
 			Input.MouseMode = Input.MouseModeEnum.Visible;
 			GetViewport().WarpMouse(_initialCursorPosition);
-		} 
+		}
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
 		Position = _localPosition + _player.Position;
+
+		/* int texelSize = (int)(Size / 180);
+		
+		Vector3 snapSpacePosition = Transform * Position;
+
+		Vector3 snapSnappedSpacePosition = snapSpacePosition.Snapped(Vector3.One * texelSize);
+
+		Vector3 error = snapSnappedSpacePosition - snapSpacePosition;
+		
+		HOffset = error.X;
+		VOffset = error.Y;
+
+		if (error.Length() > 0.001) 
+			GD.Print(error); */
 	}
 
 	//? it assumes counterclockwise camera rotation
@@ -131,7 +161,7 @@ public partial class CameraMovement : Camera3D
 		return GetRotatedQuaternionY(_initialBasis.GetRotationQuaternion(), angle);
 	}
 
-	private Quaternion GetRotatedQuaternionY(Quaternion quaternion, float angle)
+	private static Quaternion GetRotatedQuaternionY(Quaternion quaternion, float angle)
 	{
 		return new Quaternion(Vector3.Up, angle) * quaternion;
 	}

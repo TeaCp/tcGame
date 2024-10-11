@@ -25,7 +25,6 @@ anchors_preset = -1
 anchor_right = 1.0
 anchor_bottom = 1.0
 stretch = true
-stretch_shrink = 4
 metadata/_edit_use_anchors_ = true
 
 [node name="SubViewport" type="SubViewport" parent="Control/SubViewportContainer"]
